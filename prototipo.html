@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mini Adulto — Prototipo de pantallas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap">
+<style>
+/* Layout: hoja editorial de handoff — portada, mapa de flujo y una grilla de pantallas de celular para imprimir y recortar. Tema único (papel). */
+:root{
+  --paper:#F4F4F1;      /* fondo de la hoja */
+  --screen:#FFFFFF;     /* pantalla del celular */
+  --ink:#1A1B19;        /* texto principal */
+  --muted:#6F6F68;      /* texto secundario */
+  --faint:#9A9A92;      /* terciario / placeholders */
+  --line:#D8D7D0;       /* hairlines */
+  --accent:#2E4A43;     /* petróleo sobrio */
+  --accent-soft:#E6ECE8;/* fondo de énfasis */
+  --alert:#7E4535;      /* arcilla, solo para salud/crisis */
+  --alert-soft:#F0E6E1;
+  color-scheme: light;
+  --display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --ui:"Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--ui);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{
+  max-width:1080px;
+  margin:0 auto;
+  padding-left:max(24px, env(safe-area-inset-left, 0px));
+  padding-right:max(24px, env(safe-area-inset-right, 0px));
+  padding-block:40px 64px;
+}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;margin:0;text-wrap:balance;line-height:1.15}
+p{margin:0}
+
+/* ---------- Portada ---------- */
+.cover{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:8px}
+.brand{font-family:var(--display);font-weight:600;font-size:46px;letter-spacing:-.015em;line-height:1}
+.kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:14px}
+.lede{font-family:var(--display);font-size:21px;color:var(--ink);max-width:48ch;margin-top:16px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:18px;color:var(--muted);font-size:13px}
+.meta span{white-space:nowrap}
+
+/* ---------- Encabezado de sección ---------- */
+.section-head{margin:48px 0 20px;padding-top:8px;border-top:2px solid var(--ink)}
+.section-head .n{font-family:var(--display);font-size:13px;color:var(--accent);font-weight:600;letter-spacing:.08em}
+.section-head h2{font-size:26px;margin-top:6px}
+.section-head p{color:var(--muted);font-size:14px;margin-top:6px;max-width:62ch}
+
+/* ---------- Mapa de flujo ---------- */
+.flow{background:var(--screen);border:1px solid var(--line);border-radius:10px;padding:22px}
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.node{border:1px solid var(--line);border-radius:7px;padding:8px 12px;font-size:13px;font-weight:500;background:var(--paper);white-space:nowrap}
+.node.strong{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.node .id{font-family:var(--display);font-weight:600;margin-right:6px;color:var(--accent)}
+.node.strong .id{color:#cfe0d9}
+.arrow{color:var(--faint);font-size:16px}
+.branch{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.branch .lbl{width:100%;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px;font-size:13px;color:var(--muted)}
+.legend b{color:var(--ink);font-weight:600}
+
+/* ---------- Grilla de pantallas ---------- */
+.screens{display:grid;grid-template-columns:repeat(2,1fr);gap:28px 24px;margin-top:4px}
+.cell{display:flex;flex-direction:column;gap:10px;break-inside:avoid}
+.cap{display:flex;align-items:baseline;gap:10px}
+.cap .cid{font-family:var(--display);font-weight:600;color:var(--accent);font-size:15px}
+.cap .cname{font-weight:600;font-size:15px}
+.cap .cflow{margin-left:auto;font-size:11.5px;color:var(--faint);white-space:nowrap}
+.cnote{font-size:12.5px;color:var(--muted);margin-top:-4px}
+
+/* ---------- Celular ---------- */
+.phone{
+  background:var(--screen);
+  border:1px solid #cdccc4;
+  border-radius:22px;
+  padding:9px;
+  box-shadow:0 1px 0 rgba(0,0,0,.04);
+}
+.bezel{border:1px solid var(--line);border-radius:15px;overflow:hidden;display:flex;flex-direction:column;min-height:430px}
+.status{display:flex;justify-content:space-between;align-items:center;padding:7px 14px 5px;font-size:10.5px;color:var(--faint);letter-spacing:.02em}
+.status .dots{letter-spacing:2px}
+.app{flex:1;display:flex;flex-direction:column;padding:12px 14px 16px;gap:11px}
+.app.pad-less{gap:9px}
+
+/* elementos de UI dentro del celular */
+.top{display:flex;align-items:center;gap:8px}
+.top .back{color:var(--faint);font-size:14px}
+.ttl{font-family:var(--display);font-weight:600;font-size:18px;line-height:1.1}
+.ttl.big{font-size:22px}
+.sub{font-size:12.5px;color:var(--muted)}
+.hint{font-size:11.5px;color:var(--faint)}
+
+.card{border:1px solid var(--line);border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:5px}
+.card.accent{background:var(--accent-soft);border-color:#cfe0d9}
+.card .ck{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.card .cmain{font-size:13.5px;line-height:1.4}
+.card .cmain b{font-weight:600}
+
+.money{font-family:var(--display)}
+.bar{height:7px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar > i{display:block;height:100%;background:var(--accent);border-radius:4px}
+
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:11px 12px;min-height:58px;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.tile .tn{font-weight:600;font-size:13.5px}
+.tile .td{font-size:11px;color:var(--muted)}
+
+.list{display:flex;flex-direction:column}
+.li{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:13px}
+.li:first-child{border-top:0}
+.li .lmain{display:flex;flex-direction:column;gap:1px;min-width:0}
+.li .lsub{font-size:11px;color:var(--muted)}
+.li .rt{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap}
+.li .rt.price{font-family:var(--display);color:var(--ink)}
+.box{width:15px;height:15px;border:1.5px solid var(--faint);border-radius:4px;flex:none}
+.box.on{background:var(--accent);border-color:var(--accent);position:relative}
+.box.on::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);border-radius:40px;padding:5px 11px;font-size:12px;color:var(--ink)}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:500}
+.chip.q{background:var(--paper);color:var(--muted);font-size:11.5px}
+
+.field{border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:13px;color:var(--faint);display:flex;align-items:center;justify-content:space-between}
+.field .v{color:var(--ink);font-family:var(--display)}
+
+.btn{margin-top:auto;background:var(--accent);color:#fff;border-radius:8px;padding:11px;text-align:center;font-weight:600;font-size:13.5px}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid #cfe0d9}
+.foot{text-align:center;font-size:11.5px;color:var(--faint)}
+
+.qa{display:flex;flex-direction:column;gap:8px}
+.bub{max-width:88%;padding:9px 11px;border-radius:12px;font-size:12.5px;line-height:1.45}
+.bub.me{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+.bub.app{align-self:flex-start;background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:4px}
+.inputbar{border:1px solid var(--line);border-radius:40px;padding:9px 14px;font-size:12px;color:var(--faint);display:flex;justify-content:space-between;align-items:center}
+
+.step{display:flex;gap:10px;font-size:12.5px;line-height:1.45}
+.step .sn{font-family:var(--display);font-weight:600;color:var(--accent);flex:none;width:16px}
+.warn{display:flex;gap:9px;align-items:flex-start;background:var(--alert-soft);border:1px solid #e4cfc6;border-radius:9px;padding:9px 11px;font-size:12px;line-height:1.4}
+.warn .wk{color:var(--alert);font-weight:600;flex:none}
+.crisis{background:var(--alert-soft);border:1px solid #e4cfc6;border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:7px}
+.crisis .ck{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--alert);font-weight:600}
+.crline{display:flex;align-items:baseline;gap:8px;font-size:13px}
+.crline b{font-family:var(--display);font-size:15px}
+.tag{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);border:1px solid #cfe0d9;border-radius:4px;padding:1px 6px;font-weight:600}
+
+.notif{background:var(--ink);color:#fff;border-radius:14px;padding:13px 15px;display:flex;flex-direction:column;gap:6px;margin:auto 0}
+.notif .nh{display:flex;justify-content:space-between;font-size:10.5px;color:#b9b9b2;letter-spacing:.04em}
+.notif .nt{font-family:var(--display);font-size:14px;font-weight:600}
+.notif .nb{font-size:12.5px;color:#e6e6df;line-height:1.45}
+
+/* ---------- Ayuda de impresión ---------- */
+.printbar{position:fixed;right:18px;bottom:18px;background:var(--ink);color:#fff;border:0;border-radius:40px;padding:11px 18px;font-family:var(--ui);font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.tip{background:var(--accent-soft);border:1px solid #cfe0d9;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--accent);margin-top:20px}
+
+@media (max-width:720px){
+  .screens{grid-template-columns:1fr}
+  .brand{font-size:36px}
+}
+
+@media print{
+  @page{margin:12mm}
+  body{background:#fff}
+  .wrap{padding:0;max-width:none}
+  .printbar,.tip{display:none}
+  .phone{box-shadow:none;border-color:#bbb}
+  .section-head{break-after:avoid}
+  .cell{break-inside:avoid;page-break-inside:avoid}
+  .flow{break-inside:avoid}
+  .screens{gap:18px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ PORTADA ============ -->
+  <header class="cover">
+    <div class="kicker">Prototipo de pantallas · Fase Desarrollar</div>
+    <div class="brand">Mini Adulto</div>
+    <p class="lede">El hub de todo lo que necesita alguien que vive solo por primera vez. Resuelve la comida y lo que se daña en la casa, sin que eso se vuelva otra tarea.</p>
+    <div class="meta">
+      <span>Diseño en Ingeniería Industrial</span>
+      <span>Uniandes · 2026-20 · Grupo 1</span>
+      <span>Usuario: estudiante foráneo</span>
+      <span>Persona: Mariano Casas, 19</span>
+    </div>
+  </header>
+
+  <!-- ============ MAPA DE FLUJO ============ -->
+  <div class="section-head">
+    <div class="n">Mapa de navegación</div>
+    <h2>Cómo se mueve entre pantallas</h2>
+    <p>Una entrada casi sin configuración lleva al Inicio, que es el centro. Desde ahí salen las cuatro funciones y el puente institucional. En gris, el camino principal que se testea primero: resolver la comida y la plata de la semana.</p>
+  </div>
+  <div class="flow">
+    <div class="flow-row">
+      <span class="node"><span class="id">A1</span>Portada</span>
+      <span class="arrow">→</span>
+      <span class="node"><span class="id">A2</span>Tres preguntas</span>
+      <span class="arrow">→</span>
+      <span class="node strong"><span class="id">B1</span>Inicio</span>
+    </div>
+    <div class="branch">
+      <span class="lbl">Desde Inicio</span>
+      <span class="node"><span class="id">C</span>Mi semana · comida · plata</span>
+      <span class="node"><span class="id">D</span>Resolver</span>
+      <span class="node"><span class="id">E</span>Aprender</span>
+      <span class="node"><span class="id">F</span>Preguntar</span>
+      <span class="node"><span class="id">G</span>Red en Bogotá</span>
+    </div>
+    <div class="legend">
+      <span><b>Camino principal (núcleo):</b> A1 → A2 → B1 → C1 → C2 → C3 → C4, y cada noche C5.</span>
+      <span><b>Red que responde:</b> B1 → D / F / G.</span>
+    </div>
+  </div>
+
+  <!-- ============ A. ENTRADA ============ -->
+  <div class="section-head">
+    <div class="n">A · Entrada</div>
+    <h2>Setup casi cero</h2>
+    <p>Principio de Ligereza: la app no puede pedir trabajo antes de quitarlo. Tres preguntas y arma la semana sola.</p>
+  </div>
+  <div class="screens">
+
+    <div class="cell">
+      <div class="cap"><span class="cid">A1</span><span class="cname">Portada</span><span class="cflow">→ A2</span></div>
+      <div class="cnote">Entrada. Una frase de valor, un botón.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app">
+          <div style="margin:auto 0;display:flex;flex-direction:column;gap:12px">
+            <div class="ttl big" style="font-size:30px">Mini Adulto</div>
+            <p class="sub" style="font-size:14px">Vivir solo, sin que se sienta así. Hecho para los que llegaron a Bogotá a estudiar.</p>
+          </div>
+          <div class="btn">Empezar</div>
+          <div class="foot">Gratis para estudiantes</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">A2</span><span class="cname">Tres preguntas</span><span class="cflow">→ B1</span></div>
+      <div class="cnote">Todo en una pantalla. Lo demás lo infiere la app.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="ttl">Tres preguntas y listo</div>
+          <div class="sub">¿Cómo es tu semana?</div>
+          <div class="chips"><span class="chip">Solo estudio</span><span class="chip on">Estudio y trabajo</span></div>
+          <div class="sub">¿Cuánta plata manejas a la semana?</div>
+          <div class="field"><span>Presupuesto</span><span class="v">$ 150.000</span></div>
+          <div class="sub">¿Algo que no comas?</div>
+          <div class="chips"><span class="chip on">Nada de cerdo</span><span class="chip">Sin lactosa</span><span class="chip">Vegetariano</span></div>
+          <div class="btn">Armar mi semana</div>
+          <div class="foot">El horario lo ajustas después. Lo demás lo hago yo.</div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+
+  <!-- ============ B. HUB ============ -->
+  <div class="section-head">
+    <div class="n">B · Centro</div>
+    <h2>Inicio</h2>
+    <p>Abre con lo de mañana ya resuelto y cuánta plata queda. Las cuatro funciones a un toque. Nunca pide "llenar" nada.</p>
+  </div>
+  <div class="screens">
+
+    <div class="cell">
+      <div class="cap"><span class="cid">B1</span><span class="cname">Inicio</span><span class="cflow">→ C / D / E / F / G</span></div>
+      <div class="cnote">El mensaje nocturno vive arriba. La plata, siempre a la vista.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app">
+          <div class="ttl">Hola, Mariano</div>
+          <div class="card accent">
+            <div class="ck">Mañana</div>
+            <div class="cmain">Mercado a las <b>11:30</b>, entre tus dos bloques de clase. Almuerzo listo: <b>arroz con pollo</b>. Te quedan <b class="money">$82.000</b> esta semana.</div>
+          </div>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span class="ck">Esta semana</span><span class="sub"><b class="money" style="color:var(--ink)">$82.000</b> de $150.000</span></div>
+            <div class="bar"><i style="width:55%"></i></div>
+          </div>
+          <div class="tiles">
+            <div class="tile"><span class="tn">Mi semana</span><span class="td">Comida, mercado y oficio ya encajados</span></div>
+            <div class="tile"><span class="tn">Resolver</span><span class="td">Se dañó algo o me siento mal</span></div>
+            <div class="tile"><span class="tn">Aprender</span><span class="td">Tutoriales cortos de la casa</span></div>
+            <div class="tile"><span class="tn">Preguntar</span><span class="td">Como le preguntarías a tu mamá</span></div>
+          </div>
+          <div class="li" style="border-top:1px solid var(--line);padding-top:10px"><span class="dot"></span><div class="lmain"><span>Red en Bogotá</span><span class="lsub">FOPRE, Consejería y líneas de ayuda</span></div><span class="rt">→</span></div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">C5</span><span class="cname">Mensaje nocturno</span><span class="cflow">débito automático</span></div>
+      <div class="cnote">Llega cada noche. Reemplaza la planeación: no la carga el usuario.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>21:00</span><span class="dots">· · ·</span></div>
+        <div class="app">
+          <div class="notif">
+            <div class="nh"><span>Mini Adulto</span><span>9:00 p. m.</span></div>
+            <div class="nt">Lo de mañana</div>
+            <div class="nb">Mercado a las 11:30 y el almuerzo ya está decidido. Te quedan $82.000 esta semana. Nada más por hoy. Descansa.</div>
+          </div>
+          <div class="foot">Sin tareas por marcar. Sin rachas. Sin regaños.</div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+
+  <!-- ============ C. ORGANIZARSE ============ -->
+  <div class="section-head">
+    <div class="n">C · Organizarse (núcleo)</div>
+    <h2>La semana resuelta: comida y plata</h2>
+    <p>Se entra por la comida, no por un calendario vacío. La app propone el menú, la lista y cuánto se puede gastar; el usuario solo ajusta. Caddie: ella carga la logística, él decide.</p>
+  </div>
+  <div class="screens">
+
+    <div class="cell">
+      <div class="cap"><span class="cid">C1</span><span class="cname">Mi semana</span><span class="cflow">→ C2 · C3 · C4</span></div>
+      <div class="cnote">Ya viene armada. Mercado y oficio caen en los huecos del horario.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Mi semana</span></div>
+          <div class="sub">Ya la armé con tus clases y tu trabajo.</div>
+          <div class="list">
+            <div class="li"><div class="lmain"><span><b>Lun</b> · clase 7–11, trabajo 2–6</span><span class="lsub">Almuerzo: pasta con atún · Mercado no</span></div></div>
+            <div class="li"><div class="lmain"><span><b>Mar</b> · clase 9–1</span><span class="lsub">Mercado 11:30 · Almuerzo: arroz con pollo</span></div></div>
+            <div class="li"><div class="lmain"><span><b>Mié</b> · clase 7–11</span><span class="lsub">Lavar ropa 5:00 · Almuerzo: lentejas</span></div></div>
+            <div class="li"><div class="lmain"><span><b>Jue</b> · clase 11–5</span><span class="lsub">Almuerzo: sopa + arroz (de ayer)</span></div></div>
+          </div>
+          <div class="btn ghost">Cambiar algo</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">C2</span><span class="cname">Menú de la semana</span><span class="cflow">→ C3</span></div>
+      <div class="cnote">Rápido, barato y sano. Un toque para cambiar un plato.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Menú de la semana</span></div>
+          <div class="list">
+            <div class="li"><div class="lmain"><span><b>Lun</b> Pasta con atún</span><span class="lsub">15 min · reúsa el atún del mercado</span></div><span class="rt">Cambiar</span></div>
+            <div class="li"><div class="lmain"><span><b>Mar</b> Arroz con pollo</span><span class="lsub">rinde para el jueves</span></div><span class="rt">Cambiar</span></div>
+            <div class="li"><div class="lmain"><span><b>Mié</b> Lentejas con arroz</span><span class="lsub">barato y rinde</span></div><span class="rt">Cambiar</span></div>
+            <div class="li"><div class="lmain"><span><b>Jue</b> Sopa + arroz</span><span class="lsub">sobras del martes</span></div><span class="rt">Cambiar</span></div>
+          </div>
+          <div class="foot">La app propone. Tú decides.</div>
+          <div class="btn">Ver lista de mercado</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">C3</span><span class="cname">Lista de mercado</span><span class="cflow">→ C4</span></div>
+      <div class="cnote">Una sola compra, con costo estimado. Marca lo que ya tienes.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Lista de mercado</span></div>
+          <div class="list">
+            <div class="li"><span class="box on"></span><div class="lmain"><span>Pechuga de pollo</span></div><span class="rt price">$12.000</span></div>
+            <div class="li"><span class="box"></span><div class="lmain"><span>Arroz · 1 kg</span></div><span class="rt price">$4.500</span></div>
+            <div class="li"><span class="box"></span><div class="lmain"><span>Lentejas · 500 g</span></div><span class="rt price">$3.800</span></div>
+            <div class="li"><span class="box on"></span><div class="lmain"><span>Atún · 3 latas</span></div><span class="rt price">$11.000</span></div>
+            <div class="li"><span class="box"></span><div class="lmain"><span>Verduras para la semana</span></div><span class="rt price">$14.000</span></div>
+          </div>
+          <div class="card accent" style="flex-direction:row;justify-content:space-between;align-items:center"><span class="ck">Total estimado</span><span class="money" style="font-size:18px">≈ $68.000</span></div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">C4</span><span class="cname">Plata</span><span class="cflow">núcleo</span></div>
+      <div class="cnote">Cuánto puede gastar sin quedarse corto. Sin juicios, sin "te pasaste".</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Plata</span></div>
+          <div class="card accent"><div class="ck">Esta semana puedes gastar</div><div class="money" style="font-size:26px">$82.000</div><div class="sub">después del mercado y el transporte</div></div>
+          <div class="list">
+            <div class="li"><div class="lmain"><span>Mercado</span></div><span class="rt price">$68.000</span></div>
+            <div class="li"><div class="lmain"><span>Transporte</span></div><span class="rt price">$0 · pasajes aparte</span></div>
+            <div class="li"><div class="lmain"><span>Gastos hormiga</span><span class="lsub">domicilios, tinto, onces</span></div><span class="rt price">$14.000</span></div>
+          </div>
+          <div class="card"><div class="ck">Próximo pago</div><div class="cmain">Arriendo · <b>30 de noviembre</b>. Te aviso 3 días antes.</div></div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+
+  <!-- ============ D. RESOLVER ============ -->
+  <div class="section-head">
+    <div class="n">D · Resolver</div>
+    <h2>Cuando algo pasa, hay quién responda</h2>
+    <p>Estilo IKEA: un paso a la vez, qué hacer, a quién llamar y qué NO hacer. Lo que no sabe resolver sola, lo pasa al directorio verificado o a una línea real.</p>
+  </div>
+  <div class="screens">
+
+    <div class="cell">
+      <div class="cap"><span class="cid">D1</span><span class="cname">Resolver</span><span class="cflow">→ D2</span></div>
+      <div class="cnote">Entrada por lo que pasó, en lenguaje del usuario.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">¿Qué pasó?</span></div>
+          <div class="list">
+            <div class="li"><span class="dot"></span><div class="lmain"><span>Se dañó algo en la casa</span><span class="lsub">ducha, luz, sifón, nevera</span></div><span class="rt">→</span></div>
+            <div class="li"><span class="dot"></span><div class="lmain"><span>Me siento mal</span><span class="lsub">salud física o emocional</span></div><span class="rt">→</span></div>
+            <div class="li"><span class="dot"></span><div class="lmain"><span>Un recibo que no entiendo</span></div><span class="rt">→</span></div>
+            <div class="li"><span class="dot"></span><div class="lmain"><span>Una vuelta por hacer</span><span class="lsub">EPS, banco, arriendo</span></div><span class="rt">→</span></div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">D2</span><span class="cname">Resolver · detalle</span><span class="cflow">→ D3</span></div>
+      <div class="cnote">Un paso a la vez. Incluye qué NO hacer. Termina en a quién llamar.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Se dañó la ducha</span></div>
+          <div class="step"><span class="sn">1</span><span>Cierra la llave de paso del agua (suele estar junto al calentador o en el baño).</span></div>
+          <div class="step"><span class="sn">2</span><span>Toma una foto de la llave y de la fuga. La vas a necesitar.</span></div>
+          <div class="warn"><span class="wk">No</span><span>No intentes abrir la regadera a la fuerza ni metas alambre: puedes dañar la tubería y sale más caro.</span></div>
+          <div class="card"><div class="ck">Quién lo arregla</div><div class="cmain">Esto lo ve un <b>plomero</b>. Tengo tres verificados cerca de ti.</div></div>
+          <div class="btn">Ver plomeros cerca</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">D3</span><span class="cname">Directorio verificado</span><span class="cflow">llamar</span></div>
+      <div class="cnote">Pocos lugares, cargados a mano y verificados para el prototipo.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Plomeros cerca</span></div>
+          <div class="list">
+            <div class="li"><div class="lmain"><span>Plomería Chapinero <span class="tag">Verificado</span></span><span class="lsub">a 8 min · atiende hoy</span></div><span class="rt">Llamar</span></div>
+            <div class="li"><div class="lmain"><span>Hernán · técnico</span><span class="lsub">a 12 min · recomendado por la U</span></div><span class="rt">Llamar</span></div>
+          </div>
+          <div class="ttl" style="font-size:15px;margin-top:4px">Lavanderías</div>
+          <div class="list">
+            <div class="li"><div class="lmain"><span>Lavaseco La 45 <span class="tag">Verificado</span></span><span class="lsub">lava y entrega · $9.000/kg</span></div><span class="rt">Ver</span></div>
+          </div>
+          <div class="hint">Verificado por el equipo · nov 2026</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">E1</span><span class="cname">Aprender</span><span class="cflow">→ E2</span></div>
+      <div class="cnote">Tutoriales cortos de la casa. Para no aprender por prueba y error.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Aprender</span></div>
+          <div class="sub">Lo básico, un paso a la vez.</div>
+          <div class="list">
+            <div class="li"><div class="lmain"><span>Lavar la ropa sin dañarla</span></div><span class="rt">3 min</span></div>
+            <div class="li"><div class="lmain"><span>Arroz que no se pega</span></div><span class="rt">2 min</span></div>
+            <div class="li"><div class="lmain"><span>Quitar una mancha</span></div><span class="rt">2 min</span></div>
+            <div class="li"><div class="lmain"><span>Leer el recibo de la luz</span></div><span class="rt">4 min</span></div>
+            <div class="li"><div class="lmain"><span>Destapar un sifón</span></div><span class="rt">3 min</span></div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+
+  <!-- ============ E/F. APRENDER Y PREGUNTAR ============ -->
+  <div class="section-head">
+    <div class="n">E · F · Aprender y Preguntar</div>
+    <h2>Saber hacerlo, y tener a quién preguntar</h2>
+    <p>El tutorial enseña una vez (referente IKEA). El chat responde como la mamá respondería. En temas de salud, la IA no diagnostica: orienta y deriva a información real.</p>
+  </div>
+  <div class="screens">
+
+    <div class="cell">
+      <div class="cap"><span class="cid">E2</span><span class="cname">Tutorial · detalle</span><span class="cflow">IKEA</span></div>
+      <div class="cnote">Qué necesitas antes de empezar, pasos con imagen y qué NO hacer.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Lavar la ropa</span></div>
+          <div class="card"><div class="ck">Necesitas</div><div class="cmain">Detergente · la ropa separada por color · la lavadora.</div></div>
+          <div class="step"><span class="sn">1</span><span>Separa la ropa: colores por un lado, blancos por otro.</span></div>
+          <div class="step"><span class="sn">2</span><span>Media tapa de detergente. Más no lava mejor.</span></div>
+          <div class="step"><span class="sn">3</span><span>Ciclo normal, agua fría. Tiende apenas termine.</span></div>
+          <div class="warn"><span class="wk">No</span><span>No mezcles una prenda roja nueva con ropa blanca: destiñe.</span></div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">F1</span><span class="cname">Preguntar</span><span class="cflow">chat IA</span></div>
+      <div class="cnote">Pregunta en confianza. Ejemplos listos para tocar.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Preguntar</span></div>
+          <div class="qa">
+            <div class="bub me">¿Cuánto me dura el pollo cocido en la nevera?</div>
+            <div class="bub app">De 3 a 4 días en un recipiente tapado. Si huele raro o se puso baboso, no lo comas. ¿Quieres que lo meta en el menú de mañana?</div>
+          </div>
+          <div class="chips" style="margin-top:4px"><span class="chip q">¿Qué hago si se fue la luz?</span><span class="chip q">¿Cómo separo la basura?</span></div>
+          <div class="inputbar"><span>Pregúntale como a tu mamá…</span><span style="color:var(--accent)">Enviar</span></div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">F2</span><span class="cname">Preguntar · caso salud</span><span class="cflow">sin diagnóstico</span></div>
+      <div class="cnote">Riesgo del curso. Orienta con lo básico y deriva a líneas reales.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="qa">
+            <div class="bub me">Creo que me intoxiqué, estoy solo y me siento muy mal.</div>
+            <div class="bub app">Tómalo con calma. Toma agua a sorbos y no te automediques. Yo no puedo decirte qué tienes.</div>
+          </div>
+          <div class="crisis">
+            <div class="ck">Si es grave o empeora</div>
+            <div class="crline"><b>123</b><span>Emergencias · ambulancia</span></div>
+            <div class="crline"><b>106</b><span>Hablar con alguien ya · 24 horas</span></div>
+            <div class="crline"><span>En la U</span><span>Centro de Consejería</span></div>
+          </div>
+          <div class="hint">La app orienta, no reemplaza a un profesional.</div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="cell">
+      <div class="cap"><span class="cid">G1</span><span class="cname">Red en Bogotá</span><span class="cflow">puente</span></div>
+      <div class="cnote">El nombre real, qué ofrece y cómo se llega. No duplica: conecta.</div>
+      <div class="phone"><div class="bezel">
+        <div class="status"><span>9:41</span><span class="dots">· · ·</span></div>
+        <div class="app pad-less">
+          <div class="top"><span class="back">←</span><span class="ttl">Red en Bogotá</span></div>
+          <div class="card"><div class="ck">FOPRE</div><div class="cmain">Fondo de la U para <b>alimentación, transporte y materiales</b>. Se pide en Apoyo Financiero cada semestre.</div><div class="hint">Cómo llegar: kiosco en el campus</div></div>
+          <div class="card"><div class="ck">Centro de Consejería</div><div class="cmain">Apoyo psicológico de Uniandes. También la app <b>No estás sol@</b> con tu correo institucional.</div></div>
+          <div class="crisis">
+            <div class="ck">Líneas, siempre</div>
+            <div class="crline"><b>106</b><span>Escucha 24 h · WhatsApp 300 754 8933</span></div>
+            <div class="crline"><b>123</b><span>Emergencias</span></div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+
+  <div class="tip">Para imprimir: abre este archivo en el navegador y usa Imprimir (Cmd/Ctrl + P). Cada pantalla está pensada para recortarse por el marco del celular.</div>
+
+</div>
+
+<button class="printbar" onclick="window.print()">Imprimir</button>
+</body>
+</html>
