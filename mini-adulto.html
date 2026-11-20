@@ -18,6 +18,7 @@
   --paper:#F3F2EE; --surface:#FFFFFF; --casa:#FBF7F1;
   --ink:#1C1C19; --muted:#6E6E66; --faint:#9B9B91; --line:#E4E3DC;
   --brown:#86553A; --brown-soft:#EFE6DD; --green:#4F7A42; --green-soft:#E7EEE2;
+  --blue:#3E6E7A; --blue-soft:#E2ECEE; --red:#B4432F; --red-soft:#F4E4DF; --plum:#7A5A86; --plum-soft:#ECE4EF;
   color-scheme: light;
   --display:"Source Serif 4", Georgia, serif;
   --ui:"Inter", system-ui, -apple-system, sans-serif;
@@ -26,12 +27,14 @@
   --paper:#171715; --surface:#232320; --casa:#272019;
   --ink:#F1F0EA; --muted:#A3A298; --faint:#726F67; --line:#34332E;
   --brown:#CC9067; --brown-soft:#2C241D; --green:#8FBE7E; --green-soft:#232B20;
+  --blue:#86B6C2; --blue-soft:#1C2528; --red:#E0876F; --red-soft:#2E211C; --plum:#C2A2CC; --plum-soft:#271F2A;
   color-scheme: dark;
 }}
 :root[data-theme="dark"]{
   --paper:#171715; --surface:#232320; --casa:#272019;
   --ink:#F1F0EA; --muted:#A3A298; --faint:#726F67; --line:#34332E;
   --brown:#CC9067; --brown-soft:#2C241D; --green:#8FBE7E; --green-soft:#232B20;
+  --blue:#86B6C2; --blue-soft:#1C2528; --red:#E0876F; --red-soft:#2E211C; --plum:#C2A2CC; --plum-soft:#271F2A;
   color-scheme: dark;
 }
 *{box-sizing:border-box}
@@ -183,6 +186,39 @@ body{background:var(--paper);color:var(--ink);font-family:var(--ui);line-height:
 .dot2{width:6px;height:6px;border-radius:50%;background:var(--line);cursor:pointer;transition:width .2s,background .2s}
 .dot2.on{background:var(--brown);width:18px;border-radius:4px}
 
+/* Inicio reorganizado (round 2): tira de semana, línea de plata, accesos por botones */
+.weekstrip{cursor:pointer;gap:11px}
+.wrow{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px}
+.wd{display:flex;flex-direction:column;align-items:center;gap:6px;padding:7px 0 7px;border-radius:10px}
+.wd b{font-family:var(--display);font-size:12px;font-weight:600;color:var(--muted)}
+.wd .dot{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.wd .dot.c{background:var(--green)}
+.wd .dot.m{background:var(--brown)}
+.wd .dot.o{background:var(--blue)}
+.wd.on{background:var(--brown-soft)}
+.wd.on b{color:var(--brown)}
+.wlegend{display:flex;gap:14px;flex-wrap:wrap;font-size:10.5px;color:var(--muted)}
+.wlegend span{display:inline-flex;align-items:center;gap:5px}
+.wlegend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.plataline{cursor:pointer}
+.plrow{display:flex;justify-content:space-between;align-items:flex-start}
+.plrow .arrow{color:var(--faint);font-size:22px;line-height:1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.acc{display:flex;align-items:center;gap:11px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:13px 13px;cursor:pointer;font-family:var(--ui);color:var(--ink);-webkit-tap-highlight-color:transparent}
+@media (prefers-reduced-motion:no-preference){.acc{transition:transform .1s ease}}
+.acc:active{transform:scale(.97)}
+.acc .ico{width:34px;height:34px;min-width:34px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.acc .ico svg{width:19px;height:19px}
+.acc .lb{display:flex;flex-direction:column;gap:1px;min-width:0}
+.acc .lb b{font-family:var(--display);font-size:14.5px;font-weight:600;line-height:1.1}
+.acc .lb span{font-size:10.5px;color:var(--muted);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acc.a-comida .ico{background:var(--green-soft);color:var(--green)}
+.acc.a-plata .ico{background:var(--brown-soft);color:var(--brown)}
+.acc.a-semana .ico{background:var(--blue-soft);color:var(--blue)}
+.acc.a-resolver .ico{background:var(--red-soft);color:var(--red)}
+.acc.a-aprender .ico{background:var(--plum-soft);color:var(--plum)}
+.acc.a-red .ico{background:var(--green-soft);color:var(--green)}
+
 /* Chat */
 .seg{display:flex;background:var(--brown-soft);border-radius:30px;padding:3px}
 .seg button{flex:1;border:0;background:transparent;color:var(--muted);font-family:var(--ui);font-size:12.5px;font-weight:500;padding:8px;border-radius:30px;cursor:pointer}
@@ -271,45 +307,29 @@ body{background:var(--paper);color:var(--ink);font-family:var(--ui);line-height:
             <span class="msg msg-night">Mañana: mercado a las 11:30 y el almuerzo ya está listo. Te quedan <b>$82.000</b> esta semana. Nada más por hoy. Descansa.</span>
           </div>
 
-          <div class="hscroll">
-            <div class="card" data-go="semana">
-              <div class="ct">Mi semana</div>
-              <div class="mini"><span>11:30</span> Mercado, entre clases</div>
-              <div class="mini"><span>17:00</span> Lavar ropa</div>
-              <div class="mini"><span>20:00</span> Almuerzo de mañana listo</div>
-              <div class="cfoot chips"><span class="chip">Conectar horario</span></div>
+          <div class="block weekstrip" data-go="semana">
+            <div class="ck">Tu semana</div>
+            <div class="wrow">
+              <div class="wd"><b>L</b><i class="dot c"></i></div>
+              <div class="wd"><b>M</b><i class="dot m"></i></div>
+              <div class="wd on"><b>M</b><i class="dot o"></i></div>
+              <div class="wd"><b>J</b><i class="dot c"></i></div>
+              <div class="wd"><b>V</b><i class="dot c"></i></div>
+              <div class="wd"><b>S</b><i class="dot"></i></div>
+              <div class="wd"><b>D</b><i class="dot"></i></div>
             </div>
-            <div class="card" data-go="plata">
-              <div class="ct">Plata</div>
-              <div class="moneyrow"><span class="big">$82.000</span><span class="unit">disponibles</span></div>
-              <div class="bar"><i style="width:55%"></i></div>
-              <div class="mini"><span>Mercado</span> $68.000</div>
-              <div class="mini"><span>Gustos</span> $14.000</div>
-              <div class="cfoot chips"><span class="chip">Agregar banco</span></div>
-            </div>
-            <div class="card" data-go="comida">
-              <div class="ct">Comida</div>
-              <div class="weekgrid">
-                <div class="wday"><b>Lun</b><span>Pasta con atún</span></div>
-                <div class="wday"><b>Mar</b><span>Arroz con pollo</span></div>
-                <div class="wday"><b>Mié</b><span>Lentejas</span></div>
-              </div>
-              <div class="cfoot chips"><span class="chip">Ver menú</span><span class="chip">Lista de mercado</span></div>
-            </div>
-            <div class="card" data-go="resolver">
-              <div class="ct">Resolver</div>
-              <div class="chips"><span class="chip">Se dañó algo</span><span class="chip">Me siento mal</span><span class="chip">Un recibo</span><span class="chip">Una vuelta</span></div>
-              <div class="cfoot sub2">Directorio verificado cerca de ti.</div>
-            </div>
-            <div class="card" data-go="aprender">
-              <div class="ct">Aprender</div>
-              <div class="mini"><span>3 min</span> Lavar la ropa sin dañarla</div>
-              <div class="mini"><span>2 min</span> Arroz que no se pega</div>
-              <div class="mini"><span>4 min</span> Leer el recibo de la luz</div>
-              <div class="cfoot chips"><span class="chip">Ver todos</span></div>
-            </div>
+            <div class="sub2">Hoy: lavar ropa 17:00 · almuerzo de mañana listo</div>
+            <div class="wlegend"><span><i style="background:var(--green)"></i>Comida</span><span><i style="background:var(--brown)"></i>Mercado</span><span><i style="background:var(--blue)"></i>Oficio</span></div>
           </div>
-          <div class="dots" id="dots"><span class="dot2 on"></span><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span><span class="dot2"></span></div>
+
+          <div class="grid">
+            <button type="button" class="acc a-comida" data-go="comida"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16a8 8 0 0 1-16 0Z"/><path d="M8.5 7.5c0-1 .8-1.3.8-2.5M12 7c0-1 .8-1.3.8-2.5M15.5 7.5c0-1 .8-1.3.8-2.5"/></svg></span><span class="lb"><b>Comida</b><span>Menú y mercado</span></span></button>
+            <button type="button" class="acc a-plata" data-go="plata"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 7.5v9M14.3 9.6c0-1-1-1.6-2.3-1.6s-2.3.6-2.3 1.6c0 2 4.6 1.3 4.6 3.3 0 1-1 1.6-2.3 1.6s-2.3-.6-2.3-1.6"/></svg></span><span class="lb"><b>Plata</b><span>Cuánto te queda</span></span></button>
+            <button type="button" class="acc a-semana" data-go="semana"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/></svg></span><span class="lb"><b>Mi semana</b><span>Tu horario</span></span></button>
+            <button type="button" class="acc a-resolver" data-go="resolver"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M14.1 9.9 17 7M9.9 14.1 7 17M14.1 14.1 17 17M9.9 9.9 7 7"/></svg></span><span class="lb"><b>Resolver</b><span>Se dañó algo</span></span></button>
+            <button type="button" class="acc a-aprender" data-go="aprender"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.5 5 8 4.8 5.5 5.3 4.6 5.5 4 6 4 7v10c0 .8.7 1.3 1.5 1.1C8 17.7 10.5 18 12 19.3"/><path d="M12 6.5c1.5-1.5 4-1.7 6.5-1.2.9.2 1.5.7 1.5 1.7v10c0 .8-.7 1.3-1.5 1.1-2.5-.5-5-.2-6.5 1.1"/><path d="M12 6.5v12.8"/></svg></span><span class="lb"><b>Aprender</b><span>Tutoriales cortos</span></span></button>
+            <button type="button" class="acc a-red" data-go="red"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.3-6-10a6 6 0 0 1 12 0c0 4.7-6 10-6 10Z"/><circle cx="12" cy="11" r="2.3"/></svg></span><span class="lb"><b>Red en Bogotá</b><span>FOPRE, líneas</span></span></button>
+          </div>
         </section>
 
         <!-- CHAT -->
@@ -682,12 +702,13 @@ body{background:var(--paper);color:var(--ink);font-family:var(--ui);line-height:
   // -- Plata que reacciona a los gastos (persistente) --
   var BUDGET=150000, START=82000;
   var plataBig=document.getElementById('plata-big'), plataBar=document.getElementById('plata-bar');
+  var homePlata=document.getElementById('home-plata'), homeBar=document.getElementById('home-bar');
   function fmtCOP(n){return '$'+Math.max(0,Math.round(n)).toLocaleString('es-CO');}
   function renderPlata(){
-    if(!plataBig)return;
     var d=(typeof state.plata==='number')?state.plata:START;
-    plataBig.textContent=fmtCOP(d);
-    plataBar.style.width=Math.max(0,Math.min(100,d/BUDGET*100))+'%';
+    var w=Math.max(0,Math.min(100,d/BUDGET*100))+'%';
+    if(plataBig){plataBig.textContent=fmtCOP(d);plataBar.style.width=w;}
+    if(homePlata){homePlata.textContent=fmtCOP(d);homeBar.style.width=w;}
   }
   renderPlata();
   [].slice.call(document.querySelectorAll('#v-plata [data-gasto]')).forEach(function(c){
