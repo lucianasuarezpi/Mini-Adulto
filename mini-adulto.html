@@ -9,6 +9,14 @@
 <body>
 <title>Mini Adulto</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#86553A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mini Adulto">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Pixelify+Sans:wght@500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap">
@@ -300,7 +308,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--ui);line-height:
     <div>
       <div class="eye">Concepto · navegación</div>
       <h1>Mini Adulto</h1>
-      <p>En Inicio, desliza los bloques de lado y toca uno para abrir su pantalla. Abajo, el menú de iconos (Inicio · Chat · Red); en Chat, el toggle Tinto / Foro.</p>
+      <p>En Inicio tienes la semana de un vistazo y botones directos a cada sección. Abajo, el menú de iconos (Inicio · Chat · Red); en Chat, el toggle Tinto / Foro.</p>
     </div>
     <div class="ctrls">
       <div class="toggle" role="group" aria-label="Tema">
@@ -755,6 +763,12 @@ body{background:var(--paper);color:var(--ink);font-family:var(--ui);line-height:
   });
 })();
 </script>
-
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
 </body>
 </html>

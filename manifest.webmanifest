@@ -1,0 +1,17 @@
+{
+  "name": "Mini Adulto",
+  "short_name": "Mini Adulto",
+  "description": "Carga el segundo turno del estudiante foraneo: comida, plata, oficio y lo que se dana, en un solo lugar.",
+  "lang": "es-CO",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F3F2EE",
+  "theme_color": "#86553A",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
