@@ -1,5 +1,5 @@
 // Service worker de Mini Adulto (demo). Cache-first para funcionar offline.
-const CACHE = 'mini-adulto-v3';
+const CACHE = 'mini-adulto-v4';
 const ASSETS = [
   './',
   './index.html',
